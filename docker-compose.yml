@@ -3,12 +3,14 @@ services:
   zookeeper:
     image: wurstmeister/kafka:2.11-1.1.1
     environment:
-      KAFKA_OPTS: "-Djava.security.auth.login.config=/certs/zk-jaas.conf"    
-    command: ["zookeeper-server-start.sh", "/opt/kafka/config/zookeeper.properties"]
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/certs/zk-jaas.conf'
+    command:
+      ['zookeeper-server-start.sh', '/opt/kafka/config/zookeeper.properties']
     ports:
       - 2181:2181
     volumes:
       - ./certs:/certs
+      - ./zookeeper.properties:/opt/kafka/config/zookeeper.properties
 
   kafka:
     image: wurstmeister/kafka:2.11-1.1.1
@@ -19,11 +21,11 @@ services:
       - zookeeper
     environment:
       KAFKA_BROKER_ID: 1
-      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://${HOSTNAME}:9092, SASL_PLAINTEXT://${HOSTNAME}:9093' 
-      KAFKA_LISTENERS: 'SASL_SSL://0.0.0.0:9092, SASL_PLAINTEXT://0.0.0.0:9093'  
+      KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://${HOSTNAME}:9092' #, SASL_PLAINTEXT://${HOSTNAME}:9093'
+      KAFKA_LISTENERS: 'SASL_SSL://0.0.0.0:9092' #, SASL_PLAINTEXT://0.0.0.0:9093'
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: 'SASL_PLAINTEXT'
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: 'true'
+      KAFKA_SECURITY_INTER_BROKER_PROTOCOL: 'SASL_SSL'
       KAFKA_SECURITY_PROTOCOL: 'SASL_SSL'
       KAFKA_SASL_ENABLED_MECHANISMS: 'PLAIN'
       KAFKA_SASL_MECHANISM_INTER_BROKER_PROTOCOL: 'PLAIN'
@@ -33,10 +35,8 @@ services:
       KAFKA_SSL_TRUSTSTORE_LOCATION: '/certs/kafka.server.truststore.jks'
       KAFKA_SSL_TRUSTSTORE_PASSWORD: 'abcdefgh'
       KAFKA_SSL_CLIENT_AUTH: 'required'
-      KAFKA_OPTS: "-Djava.security.auth.login.config=/certs/server-jaas.conf"
+      KAFKA_OPTS: '-Djava.security.auth.login.config=/certs/kafka-jaas.conf'
       KAFKA_AUTHORIZER_CLASS_NAME: 'kafka.security.auth.SimpleAclAuthorizer'
       KAFKA_SUPER_USERS: 'User:admin'
     volumes:
       - ./certs:/certs
- 
- 
