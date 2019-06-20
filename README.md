@@ -17,23 +17,23 @@ SSL	- SSL channel
 
 Use the script `gen-ssl-certs.sh` to generate kafka server and client certs. Default password is **abcdefgh**.
 
-1. Create a CA certificate
+1. Create a CA certificate. Must use the same name as `ca-cert` without suffix to avoid file not found issues in the following steps. 
 
 ```
-$ gen-ssl-certs.sh ca ca-cert.pem CN
+$ gen-ssl-certs.sh ca ca-cert CN
 
 // generates the following
-ca-cert.pem  ca-cert.pem.key
+ca-cert  ca-cert.key
 ```
 
 2. Create server certificate for java
 
 ```
-$ gen-ssl-certs.sh -k server ca-cert kafka. server
+$ gen-ssl-certs.sh -k server ca-cert kafka. localhost
 
-// generates the following
+// generates the following files
 kafka.cert-file
-ca-cert.srl
+ca-cert.srl 
 kafka.cert-signed
 kafka.server.truststore.jks
 kafka.server.keystore.jks
@@ -43,7 +43,7 @@ kafka.server.keystore.jks
 3. Create client certificates for java
 
 ```
-$ gen-ssl-certs.sh -k client ca-cert kafka. client
+$ gen-ssl-certs.sh -k client ca-cert kafka. localhost
 // generate the following
 kafka.client.keystore.jks  kafka.client.truststore.jks
 ```
@@ -51,7 +51,7 @@ kafka.client.keystore.jks  kafka.client.truststore.jks
 4. Create client key
 
 ```
-$ gen-ssl-certs.sh client ca-cert kafka. client
+$ gen-ssl-certs.sh client ca-cert kafka. localhost
 // generate the following (just ignore the error if there is any)
 kafka.client.key
 kafka.client.req
