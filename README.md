@@ -94,14 +94,14 @@ KafkaClient {
 	org.apache.kafka.common.security.plain.PlainLoginModule required
 		username="admin"
 		password="admin"
-    user_admin="admin";
+        user_admin="admin";
 };
 
 Client {
 	org.apache.kafka.common.security.plain.PlainLoginModule required
 		username="admin"
 		password="admin"
-    user_admin="admin";
+        user_admin="admin";
 };
 ```
 
@@ -115,8 +115,7 @@ username/password is for kafka inter broker init authentication when connected a
 
 ## Client properties
 
-For consumer and producer using Java. Modify the path is it does not match.
-The first two lines are important for SASL.
+For consumer and producer using Java. The first two lines are important for SASL.
 
 ```
 // client.properties
@@ -143,7 +142,7 @@ requireClientAuthScheme=sasl
 ```
 
 ```
-// add this the environment variable
+// add this to environment variable
 KAFKA_OPTS: '-Djava.security.auth.login.config=/certs/zk-jaas.conf'
 ```
 
@@ -151,7 +150,8 @@ For kafka:
 
 ```
 // environment variable that impact server.properties options
-// listener and advertised listener cannot both use hostname as ip, else error out the address is already binded.
+
+// listener and advertised listener cannot both use hostname as ip, else error shows the address is already binded.
 // advertised listener must use an external IP in order to accept request out of docker container.
 KAFKA_ADVERTISED_LISTENERS: 'SASL_SSL://${HOSTNAME}:9092'
 KAFKA_LISTENERS: 'SASL_SSL://0.0.0.0:9092'
@@ -174,7 +174,7 @@ KAFKA_AUTHORIZER_CLASS_NAME: 'kafka.security.auth.SimpleAclAuthorizer'
 KAFKA_SUPER_USERS: 'User:admin'
 ```
 
-Start container with this command, be aware to match the cert location.
+Start container with this command.
 
 ```
 HOSTNAME=<host ip> docker-compose up -d
@@ -191,11 +191,13 @@ KAFKA_OPTS=-Djava.security.auth.login.config=/certs/kafka-jaas.conf
 
 # ./kafka-console-producer.sh --topic test --broker-list localhost:9092 --producer.config /certs/client.properties
 
-# ./kafka-console-consumer.sh --topic test --bootstrap-server loca9092 --consumer.config /certs/client.properties  --from-beginning
+# ./kafka-console-consumer.sh --topic test --bootstrap-server localhost:9092 --consumer.config /certs/client.properties  --from-beginning
 
 ```
 
-For golang client, check `kafka.go`.
+## Golang client connecting with SSL and SASL
+
+Check `kafka.go`.
 
 ## Reference
 
